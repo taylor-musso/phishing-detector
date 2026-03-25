@@ -1,9 +1,7 @@
-data_path = "data/Webpages_Classification_test_data.csv"
-
 import csv
 import json
 
-csv_file = data_path
+csv_file = "data/Webpages_Classification_test_data.csv"
 json_file = "data/webpages_classification.json"
 
 with open(csv_file, mode="r", encoding="utf-8") as infile, \
