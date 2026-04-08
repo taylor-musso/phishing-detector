@@ -1,8 +1,11 @@
 from bloom_filter import BloomFilter
 import json
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 bf = BloomFilter()
-bf.load_bit_array("bit_filter.csv")
+bf.load_bit_array("bit_array.bin")
 
 false_pos = 0
 true_neg = 0
@@ -29,3 +32,15 @@ with open("data/webpages_classification.json", "r") as f:
 
         
 print(f"True Neg: {true_neg}, True Pos: {true_pos}, False Pos: {false_pos}")
+
+conf_matrix = np.array([[true_pos, false_pos],
+                        [0, true_neg]])
+
+labels = conf_matrix
+
+plt.figure(figsize=(6,5))
+sns.heatmap(conf_matrix, annot=labels, fmt='', cmap='Blues', cbar=False,
+            xticklabels=['Predicted Bad', 'Predicted Good'],
+            yticklabels=['Actual Bad', 'Actual Good'])
+plt.title("Confusion Matrix")
+plt.show()

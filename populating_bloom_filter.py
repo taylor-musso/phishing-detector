@@ -16,5 +16,5 @@ with open("data/filtered_malicious_webpages.json", "r") as f:
         bf.update(url)
         
 print(f"Fill Ratio: {bf.get_fill_ratio()}, Bits Set: {bf.get_num_bits_set()}")
-bf.save_bit_array("bit_filter.csv")
+bf.save_bit_array("bit_array.bin")
 print("Saved bit array")

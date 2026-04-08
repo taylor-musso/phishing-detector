@@ -8,7 +8,7 @@ sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 10) 
 
 bf = BloomFilter() 
-bf.load_bit_array("bit_filter.csv") 
+bf.load_bit_array("bit_array.bin") 
 
 false_pos = 0 
 true_neg = 0 
