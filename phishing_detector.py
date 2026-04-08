@@ -2,7 +2,8 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from datetime import datetime
 import json
-import mmh3
+# import mmh3
+from mmh3 import murmur3_32
 
 sc = SparkContext()
 ssc = StreamingContext(sc, 10)
@@ -14,7 +15,8 @@ bit_array = [0] * m
 seen_urls = set()
 
 def hash_funcs(url):
-    return [mmh3.hash(url, seed=i) % m for i in range(k)]
+    
+    return [murmur3_32(key = url, seed=i) % m for i in range(k)]
 
 def process_rdd(rdd):
     global bit_array, seen_urls
