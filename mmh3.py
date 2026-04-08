@@ -1,61 +1,67 @@
-def murmur3_32(key, seed=0):
-    if isinstance(key, str):
-        key = key.encode('utf-8')
+def murmur3_32(data_key, seed=0):
+    #Convert text/url to bytes
+    if isinstance(data_key, str):
+        data_key = data_key.encode('utf-8')
     
-    length = len(key)
-    hash_val = seed
+    total_length = len(data_key) #length of bit encoding
+    hash_value = seed  
 
-    c1 = 0xcc9e2d51
-    c2 = 0x1b873593
-    r1 = 15
-    r2 = 13
-    m = 5
-    n = 0xe6546b64
+    #constants for bit scrambling (both prime numbers)
+    MIXER_1 = 0xcc9e2d51
+    MIXER_2 = 0x1b873593
+    
+    #helper for bit shifting
+    def rotate_left(value, bits_to_shift):
+        return ((value << bits_to_shift) & 0xFFFFFFFF) | (value >> (32 - bits_to_shift))
+
+    #process bits into 4 bit chunks
+    num_full_blocks = total_length // 4
+    for i in range(0, num_full_blocks * 4, 4):
+        #combine chunk into 32 bit integer
+        chunk = (data_key[i] | 
+                 (data_key[i+1] << 8) | 
+                 (data_key[i+2] << 16) | 
+                 (data_key[i+3] << 24))
+
+        #scramble the chunks with mixer values, and ensure there is no integer overflow
+        chunk = (chunk * MIXER_1) & 0xFFFFFFFF
+        chunk = rotate_left(chunk, 15)
+        chunk = (chunk * MIXER_2) & 0xFFFFFFFF
+
+        #merge scrambled chunk into hash value
+        hash_value ^= chunk
+        hash_value = rotate_left(hash_value, 13)
+        
+        # randomize the state with a linear transformation
+        hash_value = ((hash_value * 5) + 0xe6546b64) & 0xFFFFFFFF
+
+    #hash any remaining bytes not included in the 4 bit chunks
+    tail_start = num_full_blocks * 4
+    leftover_bytes = total_length % 4
+    tail_chunk = 0
+
+    if leftover_bytes >= 3:
+        tail_chunk ^= data_key[tail_start + 2] << 16
+    if leftover_bytes >= 2:
+        tail_chunk ^= data_key[tail_start + 1] << 8
+    if leftover_bytes >= 1:
+        tail_chunk ^= data_key[tail_start]
+        
+        #scramble tail chunk
+        tail_chunk = (tail_chunk * MIXER_1) & 0xFFFFFFFF
+        tail_chunk = rotate_left(tail_chunk, 15)
+        tail_chunk = (tail_chunk * MIXER_2) & 0xFFFFFFFF
+        hash_value ^= tail_chunk
 
     
-    def rotate_left(n, r):
-        return ((n << r) & 0xFFFFFFFF) | (n >> (32 - r))
-
+    #Xor top half of bits and bottom half to ensure every bit in unput affects each bit in output
+    hash_value ^= total_length 
     
-    n_blocks = length // 4
-    for i in range(0, n_blocks * 4, 4):
-       
-        k = (key[i] | 
-             (key[i+1] << 8) | 
-             (key[i+2] << 16) | 
-             (key[i+3] << 24))
-
-        k = (k * c1) & 0xFFFFFFFF
-        k = rotate_left(k, r1)
-        k = (k * c2) & 0xFFFFFFFF
-
-        hash_val ^= k
-        hash_val = rotate_left(hash_val, r2)
-        hash_val = ((hash_val * m) + n) & 0xFFFFFFFF
-
  
-    tail_index = n_blocks * 4
-    remaining = length % 4
-    k1 = 0
+    hash_value ^= (hash_value >> 16)
+    hash_value = (hash_value * 0x85ebca6b) & 0xFFFFFFFF
+    hash_value ^= (hash_value >> 13)
+    hash_value = (hash_value * 0xc2b2ae35) & 0xFFFFFFFF
+    hash_value ^= (hash_value >> 16)
 
-    if remaining >= 3:
-        k1 ^= key[tail_index + 2] << 16
-    if remaining >= 2:
-        k1 ^= key[tail_index + 1] << 8
-    if remaining >= 1:
-        k1 ^= key[tail_index]
-        k1 = (k1 * c1) & 0xFFFFFFFF
-        k1 = rotate_left(k1, r1)
-        k1 = (k1 * c2) & 0xFFFFFFFF
-        hash_val ^= k1
-
-
-    hash_val ^= length
-    hash_val ^= (hash_val >> 16)
-    hash_val = (hash_val * 0x85ebca6b) & 0xFFFFFFFF
-    hash_val ^= (hash_val >> 13)
-    hash_val = (hash_val * 0xc2b2ae35) & 0xFFFFFFFF
-    hash_val ^= (hash_val >> 16)
-
-    return hash_val
-
+    return hash_value 
