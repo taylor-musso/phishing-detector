@@ -16,7 +16,7 @@ seen_urls = set()
 
 def hash_funcs(url):
     
-    return [murmur3_32(key = url, seed=i) % m for i in range(k)]
+    return [murmur3_32(data_key = url, seed=i) % m for i in range(k)]
 
 def process_rdd(rdd):
     global bit_array, seen_urls
