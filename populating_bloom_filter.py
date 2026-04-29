@@ -13,7 +13,7 @@ with open("data/filtered_malicious_webpages.json", "r") as f:
         if not url:
             continue
 
-        bf.update(url)
+        bf.add(url)
         
 print(f"Fill Ratio: {bf.get_fill_ratio()}, Bits Set: {bf.get_num_bits_set()}")
 bf.save_bit_array("bit_array.bin")

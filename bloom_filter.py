@@ -17,6 +17,10 @@ class BloomFilter:
     def add(self, item): 
         ''' 
         Inserts item into filter 
+
+        Will only be called by populating_bloom_filter.py, which
+        contains a set of entirely malicious links, therefore it is assumed the
+        link is malicious
         ''' 
         indices = self._hashes(item) 
         for i in indices: 
@@ -31,19 +35,7 @@ class BloomFilter:
         ''' 
         indices = self._hashes(item) 
         return all(self.bit_array[i] == 1 for i in indices) 
-    
-    def update(self, item): 
-        ''' 
-        Check + insert item 
         
-        Returns: 
-            (is_false_positive (float), is_true_negative (float)) 
-        ''' 
-        indices = self._hashes(item) 
-        for i in indices: 
-            self.bit_array[i] = 1 
-        
-    
     def get_fill_ratio(self): 
         ''' 
         Return how full the bit array is (float) 
