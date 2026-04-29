@@ -1,7 +1,7 @@
 from bloom_filter import BloomFilter
 import json
 
-bf = BloomFilter()
+bf = BloomFilter(hash_algorithm="jenkins")
 
 false_pos = 0
 true_neg = 0
@@ -16,5 +16,5 @@ with open("data/filtered_malicious_webpages.json", "r") as f:
         bf.add(url)
         
 print(f"Fill Ratio: {bf.get_fill_ratio()}, Bits Set: {bf.get_num_bits_set()}")
-bf.save_bit_array("bit_array.bin")
+bf.save_bit_array("bit_array_jenkins.bin")
 print("Saved bit array")

@@ -3,8 +3,12 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import time
 
-bf = BloomFilter()
+
+start_time = time.time()
+
+bf = BloomFilter(hash_algorithm="murmur")
 bf.load_bit_array("bit_array.bin")
 
 false_pos = 0
@@ -30,8 +34,11 @@ with open("data/webpages_classification.json", "r") as f:
             if not is_malicious:
                 true_neg += 1
 
+end_time = time.time()
+
         
 print(f"True Neg: {true_neg}, True Pos: {true_pos}, False Pos: {false_pos}")
+print(f"Execution Time: {end_time - start_time:.4f} seconds")
 
 conf_matrix = np.array([[true_pos, false_pos],
                         [0, true_neg]])
