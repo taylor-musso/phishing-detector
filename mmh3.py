@@ -1,4 +1,15 @@
 def murmur3_32(data_key, seed=0):
+    """
+    Generate a 32-bit MurmurHash3 value for a string.
+
+    Args:
+        data_key (str): Input value, for example a URL.
+        seed (int): Seed value used to create multiple hash outputs.
+
+    Returns:
+        int: Unsigned 32-bit hash value.
+    """
+    
     #Convert text/url to bytes
     if isinstance(data_key, str):
         data_key = data_key.encode('utf-8')

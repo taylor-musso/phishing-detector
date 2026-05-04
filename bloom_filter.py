@@ -3,6 +3,19 @@ from jenkins_hash import jenkins_hash
 from bitarray import bitarray
 
 class BloomFilter:
+    '''
+    Bloom Filter class.
+
+    Contains functions:
+        _hashes(): returns list of bit array indices
+        add(): inserts item into filter
+        check(): checks if item is in filter
+        get_fill_ratio(): returns fill ratio of Bloom Filter
+        get_num_bits_set(): returns number of 1's in bit array
+        save_bit_array(): saves bit array to specfied file
+        load_bit_array(): loads bit array from specified file
+    '''
+    
     def __init__(self, m=100000, k=7, hash_algorithm="murmur"):
         self.m = m
         self.k = k
@@ -13,7 +26,7 @@ class BloomFilter:
 
     def _hashes(self, item):
         """
-        Backward-compatible helper used by add() and check().
+        Gets bit array indices from hash functions.
         """
         if self.hash_algorithm=="murmur":
             return [murmur3_32(data_key = item, seed=i) % self.m for i in range(self.k)]
