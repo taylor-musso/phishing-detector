@@ -3,10 +3,10 @@
 
 ## Setup Instructions
 ### Data
-The data files were too large to be pushed to GitHub, so they can be downloaded from this [box link](https://lmu.box.com/s/449gqqjbu15knftsbm6e5k7ljqb6sb99). When unzipped, it should create a folder named "data" that should be placed into the directory. 
+The data files were too large to be pushed to GitHub, so they can be downloaded from this [box link](https://lmu.box.com/s/449gqqjbu15knftsbm6e5k7ljqb6sb99). When unzipped, it should create a folder named **data** that should be placed into the directory. 
 
 ### Data Processing
-All of the data proccessing is already done and currently in the repository where it needs to be. If you want to recreate all of this, you can delete all files in bit_array as well as the two CSV files in data/
+All of the data proccessing is already done and currently in the repository where it needs to be. If you want to recreate all of this, you can delete all files in **bit_array/** as well as the two CSV files in **data/**
 
 Then run setup.py as specified:
 
