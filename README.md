@@ -34,3 +34,6 @@ or
 `spark-submit phishing_detector.py 9999 --jenkins`
 
 Default if no tag is used will be MurmurHash3.
+
+### Reports
+All reports have been submitted to Brightspace but are also uploaded here in **reports/**.
